@@ -1,0 +1,102 @@
+---
+- name: Pacman options - ParallelDownloads
+  become: true
+  lineinfile:
+    path: /etc/pacman.conf
+    regexp: ^#?ParallelDownloads =
+    line: ParallelDownloads = 7
+
+- name: Pacman options - ParallelDownloads
+  become: true
+  lineinfile:
+    path: /etc/pacman.conf
+    regexp: ^#?Color$
+    line: Color
+
+- name: Pacman options - ILoveCandy
+  become: true
+  lineinfile:
+    path: /etc/pacman.conf
+    line: ILoveCandy
+    insertafter: EOF
+
+- name: pacman -Syu
+  become: true
+  pacman:
+    update_cache: true
+    upgrade: true
+
+- name: Install essential packages
+  pacman:
+    name:
+      - git
+      - fish
+      - neovim
+      - kitty
+      - tmux
+      - tmuxp
+      - htop
+      - curl
+      - make
+      - fonts-hack
+      - stow
+      - ranger
+      - speedtest-cli
+      - neofetch
+      - ansible-lint
+    state: present
+
+- name: Install and Setup Flatpak
+  become: true
+  tasks:
+    - name: Install Flatpak and Flathub repository
+      pacman:
+        name:
+          - flatpak
+          - gnome-software
+          - gnome-software-packagekit-plugin
+        state: present
+    - name: Add Flathub remote
+      command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+- name: Install packages with Flatpak
+  become: true
+  tasks:
+    - name: Install Brave Web Browser
+      command: flatpak install -y flathub com.brave.Browser
+    - name: Install Slack
+      command: flatpak install -y flathub com.slack.Slack
+    - name: Install Bitwarden
+      command: flatpak install -y flathub com.bitwarden.desktop
+
+- name: Neovim - Plugin Manager
+  block:
+    - name: Check if Vim-Plug is already installed
+      stat:
+        path: /home/{{ ansible_user_id }}/.local/share/nvim/site/autoload/plug.vim
+      register: file_stat
+    - name: Run command if doesn't
+      command: your_command_here
+      when: not file_stat.stat.exists
+
+- name: Setup dotfiles
+  block:
+    - name: Clone dotfiles repository
+      git:
+        repo: https://github.com/talis-fb/dotfiles.git
+        dest: /home/{{ ansible_user_id }}/.dotfiles
+        update: true
+    - name: Put dotfiles symlinks in the target paths
+      command:
+        cmd: stow --verbose=2 {{ item }}
+        chdir: /home/{{ ansible_user_id }}/.dotfiles
+      loop:
+        - fish
+        - git
+        - neovim
+        - tmux
+        - tmuxp
+        - kitty
+        - ranger
+      register: stow
+      changed_when: '"--- Skipping" not in stow.stderr'
