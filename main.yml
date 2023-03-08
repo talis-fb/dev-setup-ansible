@@ -45,11 +45,13 @@
           - make
           - stow
           - ranger
+          - starship
           - speedtest-cli
           - neofetch
           - ansible-lint
         state: present
 
+    # Not working well -----------
     - name: Install and Setup Flatpak
       become: true
       block:
@@ -62,6 +64,7 @@
             state: present
         - name: Add Flathub remote
           command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    # ----------------------------
 
     - name: Install packages with Flatpak
       become: true
@@ -104,3 +107,11 @@
             - ranger
           register: stow
           changed_when: '"--- Skipping" not in stow.stderr'
+
+    # - name: Change default shell to fish
+    #   command: chsh -s /usr/bin/fish
+
+    - name: Set user shell to fish
+      user:
+        name: "talison"
+        shell: "/usr/bin/fish"
