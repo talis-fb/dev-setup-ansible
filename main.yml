@@ -139,3 +139,26 @@
         state: started
         enabled: yes
         masked: no
+
+    - name: Setup pyenv
+      block:
+        - name: Check if pyenv is installed
+          stat:
+            path: /home/{{ ansible_user_id }}/.pyenv
+          register: file_stat
+        - name: Run command if doesn't
+          block: sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+            - name: Install Pyenv
+              shell: curl https://pyenv.run | bash
+
+            - name: Setup it to fish 1
+              shell: set -Ux PYENV_ROOT $HOME/.pyenv
+            - name: Setup it to fish 2
+              shell: set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+            - name: Pacman options - ILoveCandy
+              lineinfile:
+                path: /home/{{ ansible_user_id }}/.config/fish/config.fish
+                line: pyenv init - | source
+                insertafter: EOF
+
+          when: not file_stat.stat.exists
