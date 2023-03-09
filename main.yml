@@ -17,13 +17,6 @@
         regexp: ^#?Color$
         line: Color
 
-    - name: Pacman options - ILoveCandy
-      become: true
-      lineinfile:
-        path: /etc/pacman.conf
-        line: ILoveCandy
-        insertafter: EOF
-
     - name: pacman -Syu
       become: true
       pacman:
@@ -52,14 +45,12 @@
         state: present
 
     - name: Install and Setup Flatpak
-      become: true
       block:
         - name: Install Flatpak and Flathub repository
+          become: true
           pacman:
             name:
               - flatpak
-              - gnome-software
-              - gnome-software-packagekit-plugin
             state: present
         - name: Add Flathub remote
           flatpak_remote:
@@ -69,7 +60,6 @@
             method: user
 
     - name: Install packages with Flatpak
-      become: true
       block:
         - name: Install Brave Web Browser
           flatpak:
@@ -105,6 +95,7 @@
             repo: https://github.com/talis-fb/dotfiles.git
             dest: /home/{{ ansible_user_id }}/.dotfiles
             update: true
+
         - name: Put dotfiles symlinks in the target paths
           command:
             cmd: stow --verbose=2 {{ item }}
@@ -121,7 +112,30 @@
           changed_when: '"--- Skipping" not in stow.stderr'
 
     - name: Set user shell to fish
-      become: true
       user:
-        name: talison
+        name: "{{ ansible_user_id }}"
         shell: /bin/fish
+
+    - name: Setup Tmux Plugin Manager - tpm
+      git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: /home/{{ ansible_user_id }}/.tmux/plugins/tpm
+        update: true
+
+    - name: Install development packages
+      become: true
+      pacman:
+        name:
+          - docker
+          - docker-compose
+          - nodejs
+          - npm
+          - python-pipenv
+        state: present
+
+    - name: Enable docker service in Systemd
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+        masked: no
