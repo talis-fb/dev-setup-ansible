@@ -51,7 +51,6 @@
           - ansible-lint
         state: present
 
-    # Not working well -----------
     - name: Install and Setup Flatpak
       become: true
       block:
@@ -63,18 +62,30 @@
               - gnome-software-packagekit-plugin
             state: present
         - name: Add Flathub remote
-          command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    # ----------------------------
+          flatpak_remote:
+            name: flathub
+            state: present
+            flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+            method: user
 
     - name: Install packages with Flatpak
       become: true
       block:
         - name: Install Brave Web Browser
-          command: flatpak install -y flathub com.brave.Browser
+          flatpak:
+            name: com.brave.Browser
+            state: present
+
         - name: Install Slack
-          command: flatpak install -y flathub com.slack.Slack
+          flatpak:
+            name: com.slack.Slack
+            state: present
+
         - name: Install Bitwarden
-          command: flatpak install -y flathub com.bitwarden.desktop
+          flatpak:
+            name: com.bitwarden.desktop
+            state: present
+
 
     - name: Neovim - Plugin Manager
       block:
@@ -85,6 +96,7 @@
         - name: Run command if doesn't
           command: sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
           when: not file_stat.stat.exists
+
 
     - name: Setup dotfiles
       block:
@@ -108,10 +120,8 @@
           register: stow
           changed_when: '"--- Skipping" not in stow.stderr'
 
-    # - name: Change default shell to fish
-    #   command: chsh -s /usr/bin/fish
-
     - name: Set user shell to fish
+      become: true
       user:
-        name: "talison"
-        shell: "/usr/bin/fish"
+        name: talison
+        shell: /bin/fish
