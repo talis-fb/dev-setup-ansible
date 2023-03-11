@@ -1,0 +1,17 @@
+---
+packages_to_install:
+  - git
+  - fish
+  - neovim
+  - kitty
+  - tmux
+  - tmuxp
+  - htop
+  - curl
+  - make
+  - stow
+  - ranger
+  - starship
+  - speedtest-cli
+  - neofetch
+  - ansible-lint

@@ -1,0 +1,27 @@
+---
+- name: Install development packages
+  become: true
+  pacman:
+    name:
+      - docker
+      - docker-compose
+    state: present
+
+- name: Enable docker service in Systemd
+  ansible.builtin.service:
+    name: docker
+    enabled: true
+
+- name: Start docker service in Systemd
+  ansible.builtin.service:
+    name: docker
+    state: started
+
+- name: Put User to docker group
+  become: true
+  user:
+    name: "{{ ansible_user_id }}"
+    groups:
+      - wheel
+      - docker
+    append: true

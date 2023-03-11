@@ -1,0 +1,54 @@
+---
+- name: Install essential packages
+  become: true
+  pacman:
+    name: "{{ packages_to_install }}"
+    state: present
+
+- name: Setup dotfiles
+  block:
+    - name: Clone dotfiles repository
+      git:
+        repo: https://github.com/talis-fb/dotfiles.git
+        dest: /home/{{ ansible_user_id }}/.dotfiles
+        clone: true
+        update: true
+
+    - name: Put dotfiles symlinks in the target paths
+      command:
+        cmd: stow --verbose=2 {{ item }}
+        chdir: /home/{{ ansible_user_id }}/.dotfiles
+      loop:
+        - fish
+        - git
+        - neovim
+        - tmux
+        - tmuxp
+        - kitty
+        - ranger
+      register: stow
+      changed_when: '"--- Skipping" not in stow.stderr'
+
+- name: Neovim - Plugin Manager
+  block:
+    - name: Check if Vim-Plug is already installed
+      stat:
+        path: /home/{{ ansible_user_id }}/.local/share/nvim/site/autoload/plug.vim
+      register: file_stat
+    - name: Run command if doesn't
+      command: sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+      when: not file_stat.stat.exists
+
+- name: Setup Tmux Plugin Manager - tpm
+  git:
+    repo: https://github.com/tmux-plugins/tpm.git
+    dest: /home/{{ ansible_user_id }}/.tmux/plugins/tpm
+    clone: true
+    update: true
+
+- name: Set user shell to fish
+  user:
+    name: "{{ ansible_user_id }}"
+    shell: /bin/fish
+    generate_ssh_key: true
+    ssh_key_type: ed25519

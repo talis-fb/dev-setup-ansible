@@ -1,0 +1,23 @@
+---
+- name: Install and Setup Flatpak
+  block:
+    - name: Install Flatpak and Flathub repository
+      become: true
+      pacman:
+        name:
+          - flatpak
+        state: present
+    - name: Add Flathub remote
+      flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: user
+
+- name: Install Flatpak packages
+  block:
+    - name: Install Flatpak package
+      flatpak:
+        name: "{{ item.flatpak_id }}"
+        state: present
+      loop: "{{ flatpak.apps }}"

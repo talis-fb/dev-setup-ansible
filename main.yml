@@ -1,170 +1,183 @@
 ---
-- name: Preparing Workstation
+- name: Init the magic...
   hosts: localhost
   connection: local
-  tasks:
-    - name: Pacman options - ParallelDownloads
-      become: true
-      lineinfile:
-        path: /etc/pacman.conf
-        regexp: ^#?ParallelDownloads =
-        line: ParallelDownloads = 7
 
-    - name: Pacman options - ParallelDownloads
-      become: true
-      lineinfile:
-        path: /etc/pacman.conf
-        regexp: ^#?Color$
-        line: Color
+  # vars_prompt:
+  #   - name: usuario
+  #     prompt: What is your username?
+  #     private: false
 
-    - name: pacman -Syu
-      become: true
-      pacman:
-        update_cache: true
-        upgrade: true
+  roles:
+    - desktop_apps
 
-    - name: Install essential packages
-      become: true
-      pacman:
-        name:
-          - git
-          - fish
-          - neovim
-          - kitty
-          - tmux
-          - tmuxp
-          - htop
-          - curl
-          - make
-          - stow
-          - ranger
-          - starship
-          - speedtest-cli
-          - neofetch
-          - ansible-lint
-        state: present
-
-    - name: Install and Setup Flatpak
-      block:
-        - name: Install Flatpak and Flathub repository
-          become: true
-          pacman:
-            name:
-              - flatpak
-            state: present
-        - name: Add Flathub remote
-          flatpak_remote:
-            name: flathub
-            state: present
-            flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
-            method: user
-
-    - name: Install packages with Flatpak
-      block:
-        - name: Install Brave Web Browser
-          flatpak:
-            name: com.brave.Browser
-            state: present
-
-        - name: Install Slack
-          flatpak:
-            name: com.slack.Slack
-            state: present
-
-        - name: Install Bitwarden
-          flatpak:
-            name: com.bitwarden.desktop
-            state: present
-
-
-    - name: Neovim - Plugin Manager
-      block:
-        - name: Check if Vim-Plug is already installed
-          stat:
-            path: /home/{{ ansible_user_id }}/.local/share/nvim/site/autoload/plug.vim
-          register: file_stat
-        - name: Run command if doesn't
-          command: sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-          when: not file_stat.stat.exists
-
-
-    - name: Setup dotfiles
-      block:
-        - name: Clone dotfiles repository
-          git:
-            repo: https://github.com/talis-fb/dotfiles.git
-            dest: /home/{{ ansible_user_id }}/.dotfiles
-            update: true
-
-        - name: Put dotfiles symlinks in the target paths
-          command:
-            cmd: stow --verbose=2 {{ item }}
-            chdir: /home/{{ ansible_user_id }}/.dotfiles
-          loop:
-            - fish
-            - git
-            - neovim
-            - tmux
-            - tmuxp
-            - kitty
-            - ranger
-          register: stow
-          changed_when: '"--- Skipping" not in stow.stderr'
-
-    - name: Set user shell to fish
-      user:
-        name: "{{ ansible_user_id }}"
-        shell: /bin/fish
-        groups:
-          - wheel
-          - docker
-        append: yes
-        generate_ssh_key: yes
-        ssh_key_type: ed25519
-
-    - name: Setup Tmux Plugin Manager - tpm
-      git:
-        repo: https://github.com/tmux-plugins/tpm
-        dest: /home/{{ ansible_user_id }}/.tmux/plugins/tpm
-        update: true
-
-    - name: Install development packages
-      become: true
-      pacman:
-        name:
-          - docker
-          - docker-compose
-          - nodejs
-          - npm
-          - python-pipenv
-        state: present
-
-    - name: Enable docker service in Systemd
-      systemd:
-        name: docker
-        state: started
-        enabled: yes
-        masked: no
-
-    - name: Setup pyenv
-      block:
-        - name: Check if pyenv is installed
-          stat:
-            path: /home/{{ ansible_user_id }}/.pyenv
-          register: file_stat
-        - name: Run command if doesn't
-          block:
-            - name: Install Pyenv
-              shell: curl https://pyenv.run | bash
-
-            - name: Setup it to fish 1
-              shell: set -Ux PYENV_ROOT $HOME/.pyenv
-            - name: Setup it to fish 2
-              shell: set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
-            - name: Pacman options - ILoveCandy
-              lineinfile:
-                path: /home/{{ ansible_user_id }}/.config/fish/config.fish
-                line: pyenv init - | source
-                insertafter: EOF
-
-          when: not file_stat.stat.exists
+  # roles:
+  #   - desktop_apps
+  #
+  # tasks:
+  #   - name: Pacman options - ParallelDownloads
+  #     become: true
+  #     lineinfile:
+  #       path: /etc/pacman.conf
+  #       regexp: ^#?ParallelDownloads =
+  #       line: ParallelDownloads = 7
+  #
+  #   - name: Pacman options - ParallelDownloads
+  #     become: true
+  #     lineinfile:
+  #       path: /etc/pacman.conf
+  #       regexp: ^#?Color$
+  #       line: Color
+  #
+  #   - name: pacman -Syu
+  #     become: true
+  #     pacman:
+  #       update_cache: true
+  #       upgrade: true
+  #
+  #   - name: Install essential packages
+  #     become: true
+  #     pacman:
+  #       name:
+  #         - git
+  #         - fish
+  #         - neovim
+  #         - kitty
+  #         - tmux
+  #         - tmuxp
+  #         - htop
+  #         - curl
+  #         - make
+  #         - stow
+  #         - ranger
+  #         - starship
+  #         - speedtest-cli
+  #         - neofetch
+  #         - ansible-lint
+  #       state: present
+  #
+  #   - name: Install and Setup Flatpak
+  #     block:
+  #       - name: Install Flatpak and Flathub repository
+  #         become: true
+  #         pacman:
+  #           name:
+  #             - flatpak
+  #           state: present
+  #       - name: Add Flathub remote
+  #         flatpak_remote:
+  #           name: flathub
+  #           state: present
+  #           flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+  #           method: user
+  #
+  #   - name: Install packages with Flatpak
+  #     block:
+  #       - name: Install Brave Web Browser
+  #         flatpak:
+  #           name: com.brave.Browser
+  #           state: present
+  #
+  #       - name: Install Slack
+  #         flatpak:
+  #           name: com.slack.Slack
+  #           state: present
+  #
+  #       - name: Install Bitwarden
+  #         flatpak:
+  #           name: com.bitwarden.desktop
+  #           state: present
+  #
+  #
+  #   - name: Neovim - Plugin Manager
+  #     block:
+  #       - name: Check if Vim-Plug is already installed
+  #         stat:
+  #           path: /home/{{ ansible_user_id }}/.local/share/nvim/site/autoload/plug.vim
+  #         register: file_stat
+  #       - name: Run command if doesn't
+  #         command: sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  #         when: not file_stat.stat.exists
+  #
+  #
+  #   - name: Setup dotfiles
+  #     block:
+  #       - name: Clone dotfiles repository
+  #         git:
+  #           repo: https://github.com/talis-fb/dotfiles.git
+  #           dest: /home/{{ ansible_user_id }}/.dotfiles
+  #           update: true
+  #
+  #       - name: Put dotfiles symlinks in the target paths
+  #         command:
+  #           cmd: stow --verbose=2 {{ item }}
+  #           chdir: /home/{{ ansible_user_id }}/.dotfiles
+  #         loop:
+  #           - fish
+  #           - git
+  #           - neovim
+  #           - tmux
+  #           - tmuxp
+  #           - kitty
+  #           - ranger
+  #         register: stow
+  #         changed_when: '"--- Skipping" not in stow.stderr'
+  #
+  #   - name: Set user shell to fish
+  #     user:
+  #       name: "{{ ansible_user_id }}"
+  #       shell: /bin/fish
+  #       groups:
+  #         - wheel
+  #         - docker
+  #       append: yes
+  #       generate_ssh_key: yes
+  #       ssh_key_type: ed25519
+  #
+  #   - name: Setup Tmux Plugin Manager - tpm
+  #     git:
+  #       repo: https://github.com/tmux-plugins/tpm
+  #       dest: /home/{{ ansible_user_id }}/.tmux/plugins/tpm
+  #       update: true
+  #
+  #   - name: Install development packages
+  #     become: true
+  #     pacman:
+  #       name:
+  #         - docker
+  #         - docker-compose
+  #         - nodejs
+  #         - npm
+  #         - python-pipenv
+  #       state: present
+  #
+  #   - name: Enable docker service in Systemd
+  #     service:
+  #       name: docker
+  #       enabled: yes
+  #
+  #   - name: Start docker service in Systemd
+  #     service:
+  #       name: docker
+  #       state: started
+  #
+  #   # - name: Setup pyenv
+  #   #   block:
+  #   #     - name: Check if pyenv is installed
+  #   #       stat:
+  #   #         path: /home/{{ ansible_user_id }}/.pyenv
+  #   #       register: file_stat
+  #   #     - name: Run command if doesn't
+  #   #       block:
+  #   #         - name: Install Pyenv
+  #   #           shell: curl https://pyenv.run | bash
+  #   #         - name: Setup it to fish 1
+  #   #           shell: set -Ux PYENV_ROOT $HOME/.pyenv
+  #   #         - name: Setup it to fish 2
+  #   #           shell: set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+  #   #         - name: Pacman options - ILoveCandy
+  #   #           lineinfile:
+  #   #             path: /home/{{ ansible_user_id }}/.config/fish/config.fish
+  #   #             line: pyenv init - | source
+  #   #             insertafter: EOF
+  #   #       when: not file_stat.stat.exists

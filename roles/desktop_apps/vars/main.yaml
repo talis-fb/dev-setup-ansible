@@ -1,0 +1,11 @@
+---
+flatpak:
+  apps:
+    - name: Brave Browser
+      flatpak_id: com.brave.Browser
+
+    - name: Slack
+      flatpak_id: com.slack.Slack
+
+    - name: Bitwarden
+      flatpak_id: com.bitwarden.desktop

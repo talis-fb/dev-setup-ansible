@@ -1,0 +1,20 @@
+---
+- name: Pacman options - ParallelDownloads
+  become: true
+  lineinfile:
+    path: /etc/pacman.conf
+    regexp: ^#?ParallelDownloads =
+    line: ParallelDownloads = 7
+
+- name: Pacman options - ParallelDownloads
+  become: true
+  lineinfile:
+    path: /etc/pacman.conf
+    regexp: ^#?Color$
+    line: Color
+
+- name: Pacman -Syu
+  become: true
+  pacman:
+    update_cache: true
+    upgrade: true
