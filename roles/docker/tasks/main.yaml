@@ -8,12 +8,12 @@
     state: present
 
 - name: Enable docker service in Systemd
-  ansible.builtin.service:
+  service:
     name: docker
     enabled: true
 
 - name: Start docker service in Systemd
-  ansible.builtin.service:
+  service:
     name: docker
     state: started
 

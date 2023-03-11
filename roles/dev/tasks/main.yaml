@@ -47,8 +47,30 @@
     update: true
 
 - name: Set user shell to fish
+  become: true
   user:
     name: "{{ ansible_user_id }}"
     shell: /bin/fish
     generate_ssh_key: true
     ssh_key_type: ed25519
+
+# - name: Setup pyenv
+#   block:
+#     - name: Check if pyenv is installed
+#       stat:
+#         path: /home/{{ ansible_user_id }}/.pyenv
+#       register: file_stat
+#     - name: Run command if doesn't
+#       block:
+#         - name: Install Pyenv
+#           shell: curl https://pyenv.run | bash
+#         - name: Setup it to fish 1
+#           shell: set -Ux PYENV_ROOT $HOME/.pyenv
+#         - name: Setup it to fish 2
+#           shell: set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+#         - name: Pacman options - ILoveCandy
+#           lineinfile:
+#             path: /home/{{ ansible_user_id }}/.config/fish/config.fish
+#             line: pyenv init - | source
+#             insertafter: EOF
+#       when: not file_stat.stat.exists
