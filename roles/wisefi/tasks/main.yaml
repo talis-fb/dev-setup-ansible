@@ -35,24 +35,28 @@
     mode: "0644"
   loop:
     - backend
-    - frontend
     - services/atlas
     - services/configuration
     - services/atlas
     - services/configuration
     - services/counters_worker
     - services/devices
-    - services/devops
-    - services/events
+    - services/events/connection_logs_api
+    - services/events/events_worker
     - services/health
     - services/hefesto
     - services/hermes
     - services/incloud
-    - services/statistic
+    - services/statistics
+
+- name: Setup .envs front (using differente .env path)
+  copy:
+    src: "{{ mvp_folder }}/frontend/.env.development.local"
+    dest: "{{ mvp_folder }}/frontend/.env"
+    mode: "0644"
 
 - name: Up containers - Utils
-  docker_compose:
-    project_src: "{{ mvp_folder }}/utils/mvp"
+  command: docker-compose up -d
   register: output
 
 - name: Output docker_compose
