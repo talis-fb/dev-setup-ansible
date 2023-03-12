@@ -52,7 +52,25 @@
     name: "{{ ansible_user_id }}"
     shell: /bin/fish
     generate_ssh_key: true
-    ssh_key_type: ed25519
+
+- name: Install Hack Nerd Fonts
+  block:
+    - name: ensure fonts directory
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.local/share/fonts"
+        state: directory
+
+    - name: Hack Font exists
+      shell: "ls {{ lookup('env', 'HOME') }}/.fonts/Hack*Nerd*Font*Complete*"
+      register: hack_exists
+      ignore_errors: true
+
+    - name: Download Hack
+      when: hack_exists is failed
+      unarchive:
+        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+        dest: "{{ lookup('env', 'HOME') }}/.local/share/fonts/"
+        remote_src: true
 
 # - name: Setup pyenv
 #   block:

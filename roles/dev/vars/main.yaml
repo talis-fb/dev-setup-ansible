@@ -15,3 +15,7 @@ packages_to_install:
   - speedtest-cli
   - neofetch
   - ansible-lint
+
+  # Manage fonts
+  - fontconfig
+  - unzip
