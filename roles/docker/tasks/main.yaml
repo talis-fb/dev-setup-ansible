@@ -7,15 +7,15 @@
       - docker-compose
     state: present
 
-- name: Enable docker service in Systemd
-  service:
-    name: docker
-    enabled: true
-
 - name: Start docker service in Systemd
   service:
     name: docker
     state: started
+
+- name: Enable docker service in Systemd
+  service:
+    name: docker
+    enabled: true
 
 - name: Put User to docker group
   become: true

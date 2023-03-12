@@ -7,5 +7,29 @@ flatpak:
     - name: Slack
       flatpak_id: com.slack.Slack
 
+    - name: DBeaver
+      flatpak_id: io.dbeaver.DBeaverCommunity
+
+    - name: Vs Code
+      flatpak_id: com.visualstudio.code
+
+    - name: Insomnia
+      flatpak_id: rest.insomnia.Insomnia
+
     - name: Bitwarden
       flatpak_id: com.bitwarden.desktop
+
+    - name: Discord
+      flatpak_id: com.discordapp.Discord
+
+    - name: Teams
+      flatpak_id: com.github.IsmaelMartinez.teams_for_linux
+
+    - name: Telegram
+      flatpak_id: org.telegram.desktop
+
+    - name: qBittorrent
+      flatpak_id: org.qbittorrent.qBittorrent
+
+    - name: Peek
+      flatpak_id: com.uploadedlobster.peek

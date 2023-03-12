@@ -1,0 +1,60 @@
+---
+- name: Clone Mvp-Backend
+  git:
+    repo: git@git.intelbras.com.br:wisefi/mvp-backend.git
+    dest: "{{ mvp_folder }}/backend"
+    clone: true
+    update: true
+
+- name: Clone Mvp-Services
+  git:
+    repo: git@git.intelbras.com.br:wisefi/mvp-services.git
+    dest: "{{ mvp_folder }}/services"
+    clone: true
+    update: true
+
+- name: Clone Mvp-Frontend
+  git:
+    repo: git@git.intelbras.com.br:wisefi/mvp-frontend.git
+    dest: "{{ mvp_folder }}/frontend"
+    clone: true
+    update: true
+
+- name: Clone Mvp-Utils
+  git:
+    repo: git@git.intelbras.com.br:wisefi/mvp-utils.git
+    dest: "{{ mvp_folder }}/utils"
+    clone: true
+    update: true
+
+
+- name: Setup .envs
+  copy:
+    src: "{{ mvp_folder }}/{{ item }}/.env.development"
+    dest: "{{ mvp_folder }}/{{ item }}/.env"
+    mode: "0644"
+  loop:
+    - backend
+    - frontend
+    - services/atlas
+    - services/configuration
+    - services/atlas
+    - services/configuration
+    - services/counters_worker
+    - services/devices
+    - services/devops
+    - services/events
+    - services/health
+    - services/hefesto
+    - services/hermes
+    - services/incloud
+    - services/statistic
+
+- name: Up containers - Utils
+  docker_compose:
+    project_src: "{{ mvp_folder }}/utils/mvp"
+  register: output
+
+- name: Output docker_compose
+  debug:
+    var: output
