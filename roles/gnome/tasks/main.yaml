@@ -1,0 +1,12 @@
+---
+# reference...
+# https://raduzaharia.medium.com/configuring-gnome-with-gsettings-and-dconf-91c264843ea6
+
+- name: Show settings
+  debug:
+    msg: "{{ item }}"
+  loop: "{{ settings_files }}"
+
+- name: Setup settings of files in gnome
+  shell: "cat {{ item.path }} | dconf load {{ item.schema_gnome }}"
+  loop: "{{ settings_files }}"

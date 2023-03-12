@@ -3,10 +3,10 @@
   hosts: localhost
   connection: local
 
-  vars_prompt:
-    - name: usuario
-      prompt: Qual o nome do seu usuario?
-      private: false
+  # vars_prompt:
+  #   - name: usuario
+  #     prompt: Qual o nome do seu usuario?
+  #     private: false
 
     # - name: mvp_folder
     #   prompt: Onde armazenar o diretorio pro Wisefi? (caminho absoluto)
@@ -17,4 +17,5 @@
     - dev
     - desktop_apps
     - docker
+    # - gnome
     # - wisefi

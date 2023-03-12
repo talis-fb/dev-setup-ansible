@@ -1,0 +1,15 @@
+---
+settings_files_path: "{{ role_path }}/files"
+
+settings_files:
+  - path: "{{ settings_files_path }}/desktop_peripherals_keyboard.ini"
+    schema_gnome: /org/gnome/desktop/peripherals/keyboard/
+
+  - path: "{{ settings_files_path }}/desktop_wm_keybindings.ini"
+    schema_gnome: /org/gnome/desktop/wm/keybindings/
+
+  - path: "{{ settings_files_path }}/settings-daemon_plugins_media-keys.ini"
+    schema_gnome: /org/gnome/settings-daemon/plugins/media-keys/
+
+  - path: "{{ settings_files_path }}/shell_keybindings.ini"
+    schema_gnome: /org/gnome/shell/keybindings/
