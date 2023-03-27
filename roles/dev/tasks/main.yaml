@@ -5,6 +5,19 @@
     name: "{{ packages_to_install }}"
     state: present
 
+- name: Install yay to use AUR packages
+  kewlfft.aur.aur:
+    name: yay
+    use: makepkg
+    state: present
+
+- name: Install essential packages of AUR
+  kewlfft.aur.aur:
+    name: "{{ item }}"
+    use: yay
+    state: present
+  loop: "{{ packages_aur }}"
+
 - name: Setup dotfiles
   block:
     - name: Clone dotfiles repository
@@ -71,24 +84,3 @@
         src: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
         dest: "{{ lookup('env', 'HOME') }}/.local/share/fonts/"
         remote_src: true
-
-# - name: Setup pyenv
-#   block:
-#     - name: Check if pyenv is installed
-#       stat:
-#         path: /home/{{ ansible_user_id }}/.pyenv
-#       register: file_stat
-#     - name: Run command if doesn't
-#       block:
-#         - name: Install Pyenv
-#           shell: curl https://pyenv.run | bash
-#         - name: Setup it to fish 1
-#           shell: set -Ux PYENV_ROOT $HOME/.pyenv
-#         - name: Setup it to fish 2
-#           shell: set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
-#         - name: Pacman options - ILoveCandy
-#           lineinfile:
-#             path: /home/{{ ansible_user_id }}/.config/fish/config.fish
-#             line: pyenv init - | source
-#             insertafter: EOF
-#       when: not file_stat.stat.exists

@@ -21,3 +21,7 @@ packages_to_install:
   # Manage fonts
   - fontconfig
   - unzip
+
+packages_aur:
+  - treq-bin
+  - lazydocker

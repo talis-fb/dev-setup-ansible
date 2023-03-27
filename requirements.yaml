@@ -1,3 +1,5 @@
 ---
 roles:
   - name: ableton.nix
+collections:
+  - name: kewlfft.aur
