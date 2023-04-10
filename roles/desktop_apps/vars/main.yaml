@@ -33,3 +33,6 @@ flatpak:
 
     - name: Peek
       flatpak_id: com.uploadedlobster.peek
+
+    - name: Spotify
+      flatpak_id: com.spotify.Client
