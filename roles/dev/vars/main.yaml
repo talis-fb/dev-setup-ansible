@@ -17,6 +17,9 @@ packages_to_install:
   - ansible-lint
   - ripgrep
   - fd
+  - zoxide
+  - fzf
+  - yadm
 
   # Manage fonts
   - fontconfig
