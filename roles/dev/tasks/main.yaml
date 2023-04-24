@@ -20,22 +20,22 @@
 
 - name: Install NvChad
   block:
-    - name: Check if its already installed
+    - name: Check if Neovim already has a config file (init.lua)
       stat:
         path: /home/{{ ansible_user_id }}/.config/nvim/init.lua
       register: some_neovim_config_installed
 
-    - name: Reboot if required
+    - name: Print files Neovim init.lua
       debug:
-        msg: "Status NEOVIM configuration: {{ some_neovim_config_installed }}"
+        msg: "Status NEOVIM configuration: {{ some_neovim_config_installed }}, {{ some_neovim_config_installed.stat }}"
 
     - name: Install NvChad configs
       command: git clone https://github.com/NvChad/NvChad /home/{{ ansible_user_id }}/.config/nvim --depth 1
-      when: some_neovim_config_installed is not defined
+      when: some_neovim_config_installed.stat.exists == False
 
     - name: Create folder to custom NvChad configs
       command: mkdir -p /home/{{ ansible_user_id }}/.config/nvim/lua/custom
-      when: some_neovim_config_installed is not defined
+      when: some_neovim_config_installed.stat.exists == False
 
 - name: Setup dotfiles
   block:
@@ -93,10 +93,10 @@
 
     - name: Install fisher (fish plugin manager)
       command: curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
-      when: fisher_file is not defined
+      when: fisher_file.stat.exists == False
 
     - name: Install fzf fish plugin
       command: fisher install PatrickF1/fzf.fish
-      when: fisher_file is not defined
+      when: fisher_file.stat.exists == False
 
 
