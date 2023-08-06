@@ -20,7 +20,7 @@
 - name: Put User to docker group
   become: true
   user:
-    name: "{{ ansible_user_id }}"
+    name: "{{ username }}"
     groups:
       - wheel
       - docker

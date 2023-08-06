@@ -1,0 +1,23 @@
+---
+- name: Install Shell and Prompts
+  pacman:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pacman_shell_packages }}"
+
+- name: Setup Shell
+  user:
+    name: "{{ username }}"
+    shell: "{{ shell }}"
+
+- name: Setup Starship
+  block:
+    - name: Ensure the file exists
+      file:
+        path: "{{ home_dir }}/.config/fish/config.fish"
+        state: touch
+
+    - name: Ensure starship is initialized in Fish shell config
+      lineinfile:
+        path: "{{ home_dir }}/.config/fish/config.fish"
+        line: "starship init fish | source"

@@ -1,0 +1,10 @@
+---
+- name: Install essential packages of Pacman
+  become: true
+  pacman:
+    name:
+      - ttf-hack-nerd
+      - ttf-nerd-fonts-symbols
+      - ttf-iosevka-nerd
+      - ttf-jetbrains-mono-nerd
+    state: present

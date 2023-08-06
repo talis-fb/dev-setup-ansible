@@ -1,0 +1,21 @@
+---
+- name: Init the magic...
+
+  # Setup to only target the machine executing it
+  hosts: localhost
+  connection: local
+
+  roles:
+    # - ableton.nix
+
+    - system/home_dir_structure
+    - system/timezone
+    - system/pacman
+    - system/shell
+    - system/bluetooth
+    - docker
+
+    - pacman_apps
+    - flatpak_apps
+    - work
+    - qemu

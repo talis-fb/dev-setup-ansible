@@ -1,0 +1,97 @@
+---
+username: "{{ ansible_user_id }}"
+
+shell: /usr/bin/fish
+timezone: America/Recife
+
+
+# ---------------------------
+# Directory Structures....
+# ---------------------------
+home_dir: "/home/{{ username }}"
+
+this_playbook_folder:      "{{ home_dir }}/playbook"
+job_projects_folder:      "{{ home_dir }}/works"
+personal_projects_folder: "{{ home_dir }}/projects"
+college_materials_folder: "{{ home_dir }}/ufrn"
+vms_folder:               "{{ home_dir }}/vms"
+vms_isos_folder:          "{{ home_dir }}/vms/isos"
+vms_volumes_folder:       "{{ home_dir }}/vms/volumes"
+
+required_directories:
+  - "{{ this_playbook_folder }}"
+  - "{{ job_projects_folder }}"
+  - "{{ college_materials_folder }}"
+  - "{{ vms_folder }}"
+  - "{{ vms_isos_folder }}"
+  - "{{ vms_volumes_folder }}"
+  - "{{ personal_projects_folder }}"
+  - "{{ personal_projects_folder }}/rust"
+  - "{{ personal_projects_folder }}/node"
+  - "{{ personal_projects_folder }}/elixir"
+
+
+
+# ---------------------------
+# Dotfiles
+# ---------------------------
+dotfiles_repo: "https://github.com/talis-fb/dotfiles"
+dotfiles_ssh_clone_link: "git@github.com:talis-fb/dotfiles.git"
+
+
+# ---------------------------
+# Packages
+# ---------------------------
+pacman_shell_packages:
+  - fish
+  - zsh
+  - starship
+
+pacman_packages:
+  - git
+  - vim
+  - neofetch
+  - htop
+  - speedtest-cli
+  - stow
+  - exa
+  - bat
+  - tree
+  - wget
+  - curl
+  - traceroute
+  - make
+  - ripgrep
+  - fd
+  - zoxide
+  - fzf
+  - yadm
+
+  - fontconfig
+  - unzip
+
+  # Install with NIX
+
+  # Dev tools to manage with Nix Home Manager
+  # - ranger
+  # - neovim
+  # - vs code
+  # - kitty
+  # - tmux
+  # - tmuxp
+  # - lazydocker
+  # - tpm (Tmux plugin manager)
+  
+  # Dev runtimes/compilers
+  # - nodejs
+  # - rustup / cargo
+  # - python [2..3]
+  # - go
+  # - elixir
+
+  # Dev packages
+  # - ansible-lint
+
+  # Desktop Apps
+  # - brave
+

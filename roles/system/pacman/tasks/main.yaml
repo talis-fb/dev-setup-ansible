@@ -1,4 +1,10 @@
 ---
+- name: Backup pacman.conf
+  become: true
+  copy:
+    src: /etc/pacman.conf
+    dest: /etc/pacman.conf.backup
+      
 - name: Pacman options - ParallelDownloads
   become: true
   lineinfile:
@@ -6,12 +12,19 @@
     regexp: ^#?ParallelDownloads =
     line: ParallelDownloads = 7
 
-- name: Pacman options - ParallelDownloads
+- name: Pacman options - Color
   become: true
   lineinfile:
     path: /etc/pacman.conf
     regexp: ^#?Color$
     line: Color
+
+- name: Enable ILoveCandy option
+  become: true
+  lineinfile:
+    dest: /etc/pacman.conf
+    regexp: '^#?ILoveCandy'
+    line: 'ILoveCandy'
 
 - name: Pacman -Syu
   become: true

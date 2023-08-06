@@ -1,37 +1,41 @@
 ---
+- name: Set inmaster_folder variable
+  set_fact:
+    inmaster_folder: "{{ job_projects_folder }}/inmaster"
+
 - name: Clone Mvp-Backend
   git:
     repo: git@git.intelbras.com.br:wisefi/mvp-backend.git
-    dest: "{{ mvp_folder }}/backend"
+    dest: "{{ inmaster_folder }}/backend"
     clone: true
     update: true
 
 - name: Clone Mvp-Services
   git:
     repo: git@git.intelbras.com.br:wisefi/mvp-services.git
-    dest: "{{ mvp_folder }}/services"
+    dest: "{{ inmaster_folder }}/services"
     clone: true
     update: true
 
 - name: Clone Mvp-Frontend
   git:
     repo: git@git.intelbras.com.br:wisefi/mvp-frontend.git
-    dest: "{{ mvp_folder }}/frontend"
+    dest: "{{ inmaster_folder }}/frontend"
     clone: true
     update: true
 
 - name: Clone Mvp-Utils
   git:
     repo: git@git.intelbras.com.br:wisefi/mvp-utils.git
-    dest: "{{ mvp_folder }}/utils"
+    dest: "{{ inmaster_folder }}/utils"
     clone: true
     update: true
 
 
 - name: Setup .envs
   copy:
-    src: "{{ mvp_folder }}/{{ item }}/.env.development"
-    dest: "{{ mvp_folder }}/{{ item }}/.env"
+    src: "{{ inmaster_folder }}/{{ item }}/.env.development"
+    dest: "{{ inmaster_folder }}/{{ item }}/.env"
     mode: "0644"
   loop:
     - backend
@@ -49,16 +53,16 @@
     - services/incloud
     - services/statistics
 
-- name: Setup .envs front (using differente .env path)
-  copy:
-    src: "{{ mvp_folder }}/frontend/.env.development.local"
-    dest: "{{ mvp_folder }}/frontend/.env"
-    mode: "0644"
+# - name: Setup .envs front (using differente .env path)
+#   copy:
+#     src: "{{ mvp_folder }}/frontend/.env.development.local"
+#     dest: "{{ mvp_folder }}/frontend/.env"
+#     mode: "0644"
 
-- name: Up containers - Utils
-  command: docker-compose up -d
-  register: output
+# - name: Up containers - Utils
+#   command: docker-compose up -d
+#   register: output
 
-- name: Output docker_compose
-  debug:
-    var: output
+# - name: Output docker_compose
+#   debug:
+#     var: output

@@ -1,8 +1,8 @@
 ---
 flatpak:
   apps:
-    - name: Brave Browser
-      flatpak_id: com.brave.Browser
+    # - name: Brave Browser
+    #   flatpak_id: com.brave.Browser
 
     - name: Slack
       flatpak_id: com.slack.Slack
@@ -10,8 +10,8 @@ flatpak:
     - name: DBeaver
       flatpak_id: io.dbeaver.DBeaverCommunity
 
-    - name: Vs Code
-      flatpak_id: com.visualstudio.code
+    # - name: Vs Code
+    #   flatpak_id: com.visualstudio.code
 
     - name: Insomnia
       flatpak_id: rest.insomnia.Insomnia
