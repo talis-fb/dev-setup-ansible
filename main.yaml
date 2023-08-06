@@ -6,12 +6,11 @@
   connection: local
 
   roles:
-    # - ableton.nix
-
     - system/home_dir_structure
     - system/timezone
     - system/pacman
     - system/shell
+    - system/btrfs
     - system/bluetooth
     - docker
 

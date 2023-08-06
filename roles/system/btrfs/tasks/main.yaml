@@ -1,0 +1,73 @@
+---
+- name: Install Snapper
+  become: true
+  pacman:
+    name:
+      - btrfs-progs
+      - grub-btrfs
+      - snap-pac
+      - snapper
+
+      # required by daemon of grub-btrfs
+      - inotify-tools
+    state: present
+
+# - name: Alternative way to install Snapper and btrfs utils
+#   kewlfft.aur.aur:
+#     name: snapper-support
+#     use: yay
+#     state: present
+
+- name: Install Snapper-gui
+  kewlfft.aur.aur:
+    name: btrfs-assistant
+    use: yay
+    state: present
+
+- name: Setup root / subvolume configuration in Snapper
+  block:
+    - name: Check if Snapper configuration named 'root' exists
+      stat:
+        path: /etc/snapper/configs/root
+      register: snapper_config_root
+
+    - name: Display result
+      debug:
+        var: snapper_config_root.stat.exists
+    
+    - name: Create Snapper configuration if not exists
+      become: true
+      command: snapper -c root create-config /
+      when: not snapper_config_root.stat.exists
+    
+- name: Enable Service to load snapshots in Boot
+  block:
+    - name: Start snapper-boot service in Systemd
+      service:
+        name: snapper-boot
+        state: started
+
+    - name: Enable snapper-boot service in Systemd
+      service:
+        name: snapper-boot
+        enabled: true
+
+    - name: Start snapper-boot.timer service in Systemd
+      service:
+        name: snapper-boot.timer
+        state: started
+
+    - name: Enable snapper-boot.timer service in Systemd
+      service:
+        name: snapper-boot.timer
+        enabled: true
+
+    - name: Start grub-btrfsd service in Systemd
+      service:
+        name: grub-btrfsd
+        state: startedsudo
+
+    - name: Enable grub-btrfsd service in Systemd
+      service:
+        name: grub-btrfsd
+        enabled: true
