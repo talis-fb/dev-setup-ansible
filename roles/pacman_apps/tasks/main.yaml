@@ -5,12 +5,6 @@
     name: "{{ pacman_packages }}"
     state: present
 
-- name: Install yay to use AUR packages
-  kewlfft.aur.aur:
-    name: yay
-    use: makepkg
-    state: present
-
 # - name: Install essential packages of AUR
 #   kewlfft.aur.aur:
 #     name: "{{ item }}"

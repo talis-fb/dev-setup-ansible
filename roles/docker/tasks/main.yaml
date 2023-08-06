@@ -8,11 +8,13 @@
     state: present
 
 - name: Start docker service in Systemd
+  become: true
   service:
     name: docker
     state: started
 
 - name: Enable docker service in Systemd
+  become: true
   service:
     name: docker
     enabled: true

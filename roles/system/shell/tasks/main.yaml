@@ -1,11 +1,13 @@
 ---
 - name: Install Shell and Prompts
+  become: true
   pacman:
     name: "{{ item }}"
     state: present
   loop: "{{ pacman_shell_packages }}"
 
 - name: Setup Shell
+  become: true
   user:
     name: "{{ username }}"
     shell: "{{ shell }}"

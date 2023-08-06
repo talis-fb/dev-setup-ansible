@@ -3,6 +3,10 @@
   set_fact:
     inmaster_folder: "{{ job_projects_folder }}/inmaster"
 
+- name: Print it
+  debug:
+    var: inmaster_folder
+
 - name: Clone Mvp-Backend
   git:
     repo: git@git.intelbras.com.br:wisefi/mvp-backend.git

@@ -10,11 +10,15 @@
     - system/timezone
     - system/pacman
     - system/shell
+    - system/nerdfonts
     - system/btrfs
     - system/bluetooth
     - docker
 
     - pacman_apps
-    - flatpak_apps
-    - work
     - qemu
+
+    - flatpak_apps
+
+    # Need authentication first
+    # - work/inmaster

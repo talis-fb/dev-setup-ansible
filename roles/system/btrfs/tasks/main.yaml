@@ -2,15 +2,16 @@
 - name: Install Snapper
   become: true
   pacman:
-    name:
-      - btrfs-progs
-      - grub-btrfs
-      - snap-pac
-      - snapper
-
-      # required by daemon of grub-btrfs
-      - inotify-tools
+    name: "{{ item }}"
     state: present
+  loop:
+    - btrfs-progs
+    - grub-btrfs
+    - snap-pac
+    - snapper
+
+    # required by daemon of grub-btrfs
+    - inotify-tools
 
 # - name: Alternative way to install Snapper and btrfs utils
 #   kewlfft.aur.aur:
@@ -43,31 +44,37 @@
 - name: Enable Service to load snapshots in Boot
   block:
     - name: Start snapper-boot service in Systemd
+      become: true
       service:
         name: snapper-boot
         state: started
 
     - name: Enable snapper-boot service in Systemd
+      become: true
       service:
         name: snapper-boot
         enabled: true
 
     - name: Start snapper-boot.timer service in Systemd
+      become: true
       service:
         name: snapper-boot.timer
         state: started
 
     - name: Enable snapper-boot.timer service in Systemd
+      become: true
       service:
         name: snapper-boot.timer
         enabled: true
 
     - name: Start grub-btrfsd service in Systemd
+      become: true
       service:
         name: grub-btrfsd
-        state: startedsudo
+        state: started
 
     - name: Enable grub-btrfsd service in Systemd
+      become: true
       service:
         name: grub-btrfsd
         enabled: true

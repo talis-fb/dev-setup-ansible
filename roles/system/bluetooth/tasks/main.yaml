@@ -2,7 +2,7 @@
 - name: Setup bluetooth
   block:
     - name: Install bluetooth packages
-      become: yes
+      become: true
       pacman:
         name:
           - bluez
@@ -11,13 +11,14 @@
         state: present
 
     - name: Enable fast connectable bluetooth
-      become: yes
+      become: true
       lineinfile:
         path: /etc/bluetooth/main.conf
         regexp: '#?FastConnectable ='
         line: 'FastConnectable = true'
 
     - name: Enable bluetooth
+      become: true
       service:
         name: bluetooth
         enabled: yes

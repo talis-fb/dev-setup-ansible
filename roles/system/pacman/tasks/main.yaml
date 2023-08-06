@@ -19,15 +19,23 @@
     regexp: ^#?Color$
     line: Color
 
-- name: Enable ILoveCandy option
-  become: true
-  lineinfile:
-    dest: /etc/pacman.conf
-    regexp: '^#?ILoveCandy'
-    line: 'ILoveCandy'
+# - name: Enable ILoveCandy option
+#   become: true
+#   lineinfile:
+#     dest: /etc/pacman.conf
+#     regexp: '^#?ILoveCandy'
+#     line: 'ILoveCandy'
 
 - name: Pacman -Syu
   become: true
   pacman:
     update_cache: true
     upgrade: true
+
+- name: Install yay to use AUR packagesvim
+  become: true
+  become_user: "{{ username }}"
+  kewlfft.aur.aur:
+    name: yay
+    use: makepkg
+    state: present

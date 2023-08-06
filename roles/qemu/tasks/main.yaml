@@ -2,25 +2,28 @@
 - name: Install essential Qemu packages of Pacman
   become: true
   pacman:
-    name:
-      # Basic qemu packages
-      - qemu-full
-      - qemu-desktop
-      - virt-manager
-
-      # Additional packages
-      - dnsmasq
-      - iptables-nft
-      - dmidecode
-
+    name: "{{ item }}"
     state: present
+  loop:
+    # Basic qemu packages
+    - qemu-full
+    - virt-manager
+    # - qemu-desktop (conflita)
+
+    # Additional packages
+    - dnsmasq
+    - dmidecode
+    # - iptables-nft (conflita)
+
 
 - name: Start libvirtd service in Systemd
+  become: true
   service:
     name: libvirtd
     state: started
 
 - name: Enable libvirtd service in Systemd
+  become: true
   service:
     name: libvirtd
     enabled: true
