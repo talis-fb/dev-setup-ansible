@@ -4,11 +4,13 @@
     - name: Install bluetooth packages
       become: true
       pacman:
-        name:
-          - bluez
-          - bluez-utils
-          - blueman
+        name: "{{ item }}"
         state: present
+      loop: 
+        - bluez
+        - bluez-utils
+        - blueman
+
 
     - name: Enable fast connectable bluetooth
       become: true

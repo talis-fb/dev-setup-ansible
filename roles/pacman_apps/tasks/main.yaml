@@ -2,8 +2,9 @@
 - name: Install essential packages of Pacman
   become: true
   pacman:
-    name: "{{ pacman_packages }}"
+    name: "{{ item }}"
     state: present
+  loop: "{{ pacman_packages }}"
 
 # - name: Install essential packages of AUR
 #   kewlfft.aur.aur:
