@@ -48,38 +48,40 @@ pacman_shell_packages:
   - starship
 
 pacman_packages:
+  # Dev tools
   - git
   - vim
-  - neofetch
+  - neovim
+  - tmux
+  - tmuxp
+  - kitty
+
+  # Utilities
+  - curl
   - htop
-  - speedtest-cli
-  - stow
   - exa
   - bat
-  - tree
-  - wget
-  - curl
-  - traceroute
-  - make
   - ripgrep
   - fd
   - zoxide
+  - ranger
   - fzf
-  - yadm
-
+  - tree
+  - wget
+  - neofetch
+  - speedtest-cli
+  - stow
+  - traceroute
+  - make
+  - ouch
   - fontconfig
-  - unzip
 
+
+  - lazydocker
   # Install with NIX
 
   # Dev tools to manage with Nix Home Manager
-  # - ranger
-  # - neovim
   # - vs code
-  # - kitty
-  # - tmux
-  # - tmuxp
-  # - lazydocker
   # - tpm (Tmux plugin manager)
   
   # Dev runtimes/compilers
